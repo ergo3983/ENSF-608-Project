@@ -25,17 +25,49 @@ INSERT INTO COUNTRY (country_ID, country_name) VALUE
 INSERT INTO LOCALITY (locality_name, country_ID) VALUE
 ("AB-CAL-DT", 1);
 
-INSERT INTO SCHOOL (school_ID, school_name, education_level) VALUE
-(1, "Langevin", "Junior High");
-
-UPDATE SCHOOL SET locality_ID = 1 WHERE school_ID = 1;
+INSERT INTO SCHOOL (school_ID, school_name, education_level, locality_id) VALUE
+(1, "Langevin", "Junior High", 1);
 
 INSERT INTO CLASS (class_ID, class_name, subject_name, school_ID, teacher_ID) VALUE
-(1, "MATH 9", "MATH", 1, 2);
+(1, "MATH 9", "MATH", 1, 2),
+(2, "MATH 8", "MATH", 1, 2);
+
+INSERT INTO SESSION (session_id, session_date, start_time, end_time, topic, session_status, attendance_finalized_at, class_ID) VALUE 
+(1, "2025-09-01", "8:15", "9:30", "Intro to MATH 8", "Completed", "2025-09-02", "2"),
+(2, "2025-09-02", "8:15", "9:30", "Review MATH 7", "Completed", "2025-09-03", "2"),
+(3, "2026-09-01", "8:15", "9:30", "Intro to MATH 9", "Completed", "2026-09-02", "1"), 
+(4, "2026-09-02", "8:15", "9:30", "Review MATH 8", "Completed", "2026-09-03", "1");
 
 INSERT INTO STUDENT (student_ID, first_name, last_name, date_of_birth, enrollment_status, disability_status, grade_level, gender) VALUES
 (1, "Amy", "Black", '2011-09-04', 1, "", 9, "Female"),
-(2, "Madeline", "Hester", '2012-10-09', 1, "Hearing Impaired", 8, "Female");
+(2, "Madeline", "Hester", '2012-10-09', 1, "Hearing Impaired", 8, "Female"),
+(3, "Max", "White", '2011-08-04', 1, "", 9, "Male");
 
-SELECT * FROM school;
+INSERT INTO class_student_takes (class_id, student_id, joined_on, left_on) VALUES
+(2, 1, "2025-09-01", "2026-06-30"),
+(1, 1, "2026-09-01", NULL),
+(1, 3, "2026-09-01", NULL),
+(2, 2, "2026-09-01", NULL);
 
+INSERT INTO ATTENDANCE (student_id, session_id, attendance, absence_reason) VALUES
+(1, 1, 'present', NULL),
+(1, 2, 'absent', 'medical appointment'),
+(1, 3, 'present', NULL),
+(1, 4, 'present', NULL);
+
+INSERT INTO LITERACY_ASSESSMENT (assessment_code, max_score, literacy_cutoff) VALUES
+("ENG-8-2026", 120, 60),
+("ENG-9-2027", 100, 60);
+
+INSERT INTO competency_assessment (assessment_code, max_score, proficiency_cutoff) VALUES
+("MATH-8-2026", 200, 120),
+("MATH-9-2027", 150, 100);
+
+INSERT INTO competency (competency_id, assessment_code, attempt_no, score, assessed_on, class_id, student_id) VALUES
+(1, "MATH-8-2026", 1, 100, "2026-06-20", 2, 1),
+(2, "MATH-8-2026", 2, 180, "2026-08-20", 2, 1);
+
+INSERT INTO LITERACY (literacy_id, assessment_code, attempt_no, score, assessed_on, class_id, student_id) VALUES
+(1, "ENG-8-2026", 1, 100, "2026-06-18", 2, 1),
+(2, "ENG-8-2026", 1, 50, "2026-06-18", 2, 3),
+(3, "ENG-8-2026", 2, 120, "2026-08-18", 2, 3);

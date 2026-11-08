@@ -9,12 +9,31 @@ SELECT * FROM USERS WHERE username="sobiakhan2";
 SELECT COUNTRY.adult_literacy_rate, COUNTRY.country_name 
 FROM COUNTRY;
 
--- Literacy rate among kids using only their best score for a locality
-SELECT AVG(LITERACY.score), LITERACY.student_ID
+-- Literacy rate among kids in a locality using only their best score
+SELECT AVG(LITERACY.score)
 FROM LITERACY
 WHERE LITERACY.score IN (SELECT MAX(LITERACY.score)
-                        FROM LITERACY
-                        GROUP BY LITERACY.student_ID)
+                FROM LITERACY
+                INNER JOIN CLASS_STUDENT_TAKES ON
+                literacy.student_id = CLASS_STUDENT_TAKES.student_id
+                INNER JOIN CLASS ON
+                CLASS_STUDENT_TAKES.class_id = class.class_id
+                INNER JOIN SCHOOL ON 
+                class.school_id = school.school_id
+                WHERE school.locality_id = 1
+                GROUP BY LITERACY.student_ID);
+
+-- Select max literacy score of each student in locality=1
+SELECT MAX(LITERACY.score), LITERACY.student_ID
+FROM LITERACY
+INNER JOIN CLASS_STUDENT_TAKES ON
+literacy.student_id = CLASS_STUDENT_TAKES.student_id
+INNER JOIN CLASS ON
+CLASS_STUDENT_TAKES.class_id = class.class_id
+INNER JOIN SCHOOL ON 
+class.school_id = school.school_id
+WHERE school.locality_id = 1
+GROUP BY LITERACY.student_ID;
 
 -- Get locality from literacy -> class -> school (locality)
 
