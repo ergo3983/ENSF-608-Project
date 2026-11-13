@@ -23,6 +23,28 @@ WHERE LITERACY.score IN (SELECT MAX(LITERACY.score)
                 WHERE school.locality_id = 1
                 GROUP BY LITERACY.student_ID);
 
+SELECT AVG(LITERACY.score), school.locality_id
+FROM LITERACY
+INNER JOIN CLASS_STUDENT_TAKES ON
+literacy.student_id = CLASS_STUDENT_TAKES.student_id
+INNER JOIN CLASS ON
+CLASS_STUDENT_TAKES.class_id = class.class_id
+INNER JOIN SCHOOL ON 
+class.school_id = school.school_id
+WHERE LITERACY.score IN (SELECT MAX(LITERACY.score)
+                        FROM LITERACY
+                        GROUP BY LITERACY.student_ID)
+GROUP BY SCHOOL.locality_id;
+
+SELECT LITERACY.score, school.locality_id
+FROM LITERACY
+INNER JOIN CLASS_STUDENT_TAKES ON
+literacy.student_id = CLASS_STUDENT_TAKES.student_id
+INNER JOIN CLASS ON
+CLASS_STUDENT_TAKES.class_id = class.class_id
+INNER JOIN SCHOOL ON 
+class.school_id = school.school_id;
+
 -- Select max literacy score of each student in locality=1
 SELECT MAX(LITERACY.score), LITERACY.student_ID
 FROM LITERACY
