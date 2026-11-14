@@ -71,3 +71,11 @@ INSERT INTO LITERACY (literacy_id, assessment_code, attempt_no, score, assessed_
 (1, "ENG-8-2026", 1, 100, "2026-06-18", 2, 1),
 (2, "ENG-8-2026", 1, 50, "2026-06-18", 2, 3),
 (3, "ENG-8-2026", 2, 120, "2026-08-18", 2, 3);
+
+-- INSERT INTO REMINDERS(reminder_ID, reminder_message, reminder_status, sent_at, scheduled_at, school_ID, actionitem_ID, user_ID) VALUES;
+-- INSERT INTO GOALS(goal_ID, title, sdg_target, cohort_definition, baseline_value, metric, target_value, due_date, goal_status, school_ID, government_ID) VALUES;
+-- INSERT INTO FUNDING(funding_no, source_name, source_sector, amount, currency, recieved_on, purpose, school_ID, award_ID) VALUES;
+-- INSERT INTO funding_source(source_name, source_sector) VALUES;
+-- INSERT INTO country_statistics(country_ID, statistics_year, male_pop, female_pop, gdp_per_capita, adult_literacy_rate) VALUES;
+-- INSERT INTO AWARDS(award_ID, award_name, awarding_body, category, awarded_on, award_description, school_ID) VALUES;
+-- INSERT INTO actionitem(actionitem_ID, title, item_description, item_status, due_date, completed_on, goal_ID, teacher_ID, student_ID, school_ID) VALUES;
