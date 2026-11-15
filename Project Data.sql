@@ -8,29 +8,33 @@ INSERT INTO USERS (user_ID, username, email, first_name, last_name, user_type) V
 (4, 'hyunseongjeon4', 'hyunseong.jeon@gmail.com', 'Hyunseong', 'Jeon', 'Teacher User'),
 (5, 'changgunyee5', 'changgun.yee@gmail.com', 'Changgun', 'Yee', 'Government User');
 
--- Users test data 
-INSERT INTO GOVERNMENT_USER (government_ID, department, job_title) VALUES
-(1, 'Department of Education', 'Assistant'),
-(3, 'Department of Finance', 'Assistant'),
-(5, 'Department of Education', 'Department Admin');
-
--- Users test data
-INSERT INTO TEACHER_USER (teacher_ID, qualification, hire_date) VALUES
-(2, 'Teaching License', '2024-10-15'),
-(4, 'Teaching License', '2025-10-15');
-
 INSERT INTO COUNTRY (country_ID, country_name) VALUE
-(1, "CANADA");
+(1, "CANADA"),
+(2, "PAKISTAN");
+
+-- Users test data 
+INSERT INTO GOVERNMENT_USER (government_ID, department, job_title, country_id) VALUES
+(1, 'Department of Education', 'Assistant', 1),
+(3, 'Department of Finance', 'Assistant', 1),
+(5, 'Department of Education', 'Department Admin', 2);
 
 INSERT INTO LOCALITY (locality_name, country_ID) VALUE
-("AB-CAL-DT", 1);
+("AB-CAL-DT", 1),
+("SI-KAR-SP", 2);
 
 INSERT INTO SCHOOL (school_ID, school_name, education_level, locality_id) VALUE
-(1, "Langevin", "Junior High", 1);
+(1, "Langevin", "Junior High", 1),
+(2, "Karachi Public School", "K-12", 2);
+
+-- Users test data
+INSERT INTO TEACHER_USER (teacher_ID, qualification, hire_date, school_id) VALUES
+(2, 'Teaching License', '2024-10-15', 1),
+(4, 'Teaching License', '2025-10-15', 2);
 
 INSERT INTO CLASS (class_ID, class_name, subject_name, school_ID, teacher_ID) VALUE
 (1, "MATH 9", "MATH", 1, 2),
-(2, "MATH 8", "MATH", 1, 2);
+(2, "ENG 8", "ENGLISH", 1, 2),
+(3, "URDU 9", "URDU", 2, 4);
 
 INSERT INTO SESSION (session_id, session_date, start_time, end_time, topic, session_status, attendance_finalized_at, class_ID) VALUE 
 (1, "2025-09-01", "8:15", "9:30", "Intro to MATH 8", "Completed", "2025-09-02", "2"),

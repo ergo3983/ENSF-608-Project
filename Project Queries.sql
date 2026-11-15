@@ -1,7 +1,49 @@
 USE ensf_608_project;
-SHOW TABLES;
 
-SELECT * FROM USERS WHERE username="sobiakhan2";
+-- Basic SELECT Queries  using filtering conditions (WHERE, LIKE, IN, BETWEEN, AND, OR, etc.) 
+-- Get classes Sobia teaches
+-- USE CASE: Viewing classes
+SELECT CLASS.*
+FROM CLASS
+WHERE CLASS.teacher_ID = 2;
+
+-- Get students that were absent on a specific date
+-- USE CASE: Contacting parents of students who are absent often
+SELECT ATTENDANCE.student_id, CONCAT(STUDENT.first_name, " ", STUDENT.last_name) AS Student_Name, ATTENDANCE.absence_reason
+FROM ATTENDANCE
+INNER JOIN STUDENT ON 
+ATTENDANCE.student_ID = STUDENT.student_ID
+INNER JOIN SESSION ON
+ATTENDANCE.session_ID = SESSION.session_ID
+WHERE SESSION.session_date = '2025-09-02'
+AND ATTENDANCE.attendance = 'absent';
+
+-- View student scores for a specific class
+-- Use Case: Teacher viewing student scores for standardized exam
+SELECT LITERACY.* 
+FROM LITERACY
+WHERE LITERACY.class_id = 2;
+
+-- View literacy scores in a specific range
+-- USE CASE: Figure out which students failed - need more help, need to reattempt the exam
+SELECT LITERACY.*
+FROM LITERACY 
+WHERE LITERACY.score <= 50;
+
+-- SELECT queries using aggregate functions (COUNT, SUM, AVG, MIN, MAX) 
+
+-- Get the number of times each student absent from the start of the school year in a specific school
+-- USE CASE: Calculate attendance and if some student are missing too much school
+SELECT ATTENDANCE.student_id, CONCAT(STUDENT.first_name, " ", STUDENT.last_name) AS Student_Name, COUNT(ATTENDANCE.attendance) AS Num_Absences
+FROM ATTENDANCE
+INNER JOIN STUDENT ON 
+ATTENDANCE.student_ID = STUDENT.student_ID
+INNER JOIN SESSION ON
+ATTENDANCE.session_ID = SESSION.session_ID
+WHERE SESSION.session_date > '2025-09-01'
+AND ATTENDANCE.attendance = 'absent'
+GROUP BY ATTENDANCE.student_ID;
+
 
 -- 1.	What is the literacy rate for a particular area?
 
