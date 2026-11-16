@@ -1,39 +1,65 @@
+-- ENSF 608 Group 8: SQL Queries
+-- SDG 4: Quality Education
+-- Hyunseong Jeon, Changgun Yee, Eric Godin, Hamza Itani, Sobia Khan
+
 USE ensf_608_project;
 
--- Basic SELECT Queries  using filtering conditions (WHERE, LIKE, IN, BETWEEN, AND, OR, etc.) 
--- Get classes Sobia teaches
--- USE CASE: Viewing classes
+SELECT * FROM TEACHER_USER;
+
+-- INSERT Operations
+INSERT INTO USERS (user_ID, username, password_hash, email, first_name, last_name, user_type) VALUES
+(7, 'Taylor_S', 'abcdefg' ,'taylor.s@gmail.com', 'Taylor', 'Swift', 'Teacher User');
+-- Create a new user called Taylor who can access and update the database as a teacher
+
+INSERT INTO TEACHER_USER (teacher_ID, qualification, hire_date, school_id) VALUES
+(7, 'Teaching License', '2020-09-20', 1);
+-- Add user Taylor to the teacher_user table so that her school and qualifications can be recorded and she can access
+-- and update student records.
+
+
+-- UPDATE Operations
+UPDATE GUARDIAN_PHONE
+SET phone_number = '15872221111'
+WHERE student_Id = 3 AND phone_number = '15871112222';
+-- Replace an old phone number for student named Max with updated guardian contact phone number
+
+UPDATE TEACHER_USER
+SET qualification = "Masters in Education"
+WHERE teacher_ID = 2;
+-- Update teacher qulaifications when teacher updates their qualifications
+
+
+-- DELETE Operations
+
+-- DELETE FROM GOVERNMENT_USER 
+-- WHERE 
+-- Delete government user when they no longer work for the government
+
+DELETE FROM CLASS 
+WHERE class_id = 3 and school_id = 2;
+-- Remove a class when it is no longer offered at the school
+
+
+-- Basic SELECT Queries  using filtering conditions (WHERE, LIKE, IN, BETWEEN, AND, OR, etc.) - 4
 SELECT CLASS.*
 FROM CLASS
 WHERE CLASS.teacher_ID = 2;
+-- USE CASE: Teacher viewing list of classes they are teaching for the year
+-- Get all classes a specific teacher (Sobia) teaches
 
--- Get students that were absent on a specific date
--- USE CASE: Contacting parents of students who are absent often
-SELECT ATTENDANCE.student_id, CONCAT(STUDENT.first_name, " ", STUDENT.last_name) AS Student_Name, ATTENDANCE.absence_reason
-FROM ATTENDANCE
-INNER JOIN STUDENT ON 
-ATTENDANCE.student_ID = STUDENT.student_ID
-INNER JOIN SESSION ON
-ATTENDANCE.session_ID = SESSION.session_ID
-WHERE SESSION.session_date = '2025-09-02'
-AND ATTENDANCE.attendance = 'absent';
-
--- View student scores for a specific class
--- Use Case: Teacher viewing student scores for standardized exam
-SELECT LITERACY.* 
-FROM LITERACY
-WHERE LITERACY.class_id = 2;
-
--- View literacy scores in a specific range
--- USE CASE: Figure out which students failed - need more help, need to reattempt the exam
 SELECT LITERACY.*
-FROM LITERACY 
-WHERE LITERACY.score <= 50;
+FROM LITERACY
+WHERE LITERACY.score <= 50
+AND LITERACY.class_id = 2;
+-- View literacy scores in a specific range for a specific 
+-- USE CASE: Figure out which students failed - need more help, need to reattempt the exam
 
--- SELECT queries using aggregate functions (COUNT, SUM, AVG, MIN, MAX) 
+-- SELECT queries using ORDER BY, DISTINCT, or LIMIT - 2
 
--- Get the number of times each student absent from the start of the school year in a specific school
--- USE CASE: Calculate attendance and if some student are missing too much school
+-- Get top 5 students in a country in a subjet- offer scholarships (Order By and Limit)
+
+
+-- SELECT queries using aggregate functions (COUNT, SUM, AVG, MIN, MAX) - 3
 SELECT ATTENDANCE.student_id, CONCAT(STUDENT.first_name, " ", STUDENT.last_name) AS Student_Name, COUNT(ATTENDANCE.attendance) AS Num_Absences
 FROM ATTENDANCE
 INNER JOIN STUDENT ON 
@@ -43,17 +69,47 @@ ATTENDANCE.session_ID = SESSION.session_ID
 WHERE SESSION.session_date > '2025-09-01'
 AND ATTENDANCE.attendance = 'absent'
 GROUP BY ATTENDANCE.student_ID;
+-- Get the number of times each student absent from the start of the school year in a specific school
+-- USE CASE: Calculate attendance and if some student are missing too much school
+
+-- SELECT queries using GROUP BY, including at least one with HAVING - 2
+SELECT AVG(LITERACY.score) AS score, school.school_name
+FROM LITERACY
+LEFT JOIN CLASS ON
+literacy.class_id = class.class_id
+INNER JOIN SCHOOL ON 
+class.school_id = school.school_id
+INNER JOIN lOCALITY ON
+school.locality_id = school.locality_id
+WHERE locality.country_id = 1 
+GROUP BY school.school_name
+ORDER BY score DESC;
+-- 2.	Which schools have the lowest average literacy scores in a country?
 
 
--- 1.	What is the literacy rate for a particular area?
+-- SELECT queries using INNER JOIN - 3
+SELECT ATTENDANCE.student_id, CONCAT(STUDENT.first_name, " ", STUDENT.last_name) AS Student_Name, ATTENDANCE.absence_reason
+FROM ATTENDANCE
+INNER JOIN STUDENT ON 
+ATTENDANCE.student_ID = STUDENT.student_ID
+INNER JOIN SESSION ON
+ATTENDANCE.session_ID = SESSION.session_ID
+WHERE SESSION.session_date = '2025-09-02'
+AND ATTENDANCE.attendance = 'absent';
+-- Get students that were absent on a specific date
+-- USE CASE: Contacting parents of students who are absent often
 
--- Literacy rate for a country - include countries without statistics
+-- SELECT queries using LEFT JOIN or RIGHT JOIN - 2
 SELECT COUNTRY.country_name, COUNTRY_STATISTICS.adult_literacy_rate 
 FROM COUNTRY
 LEFT JOIN country_statistics ON
 COUNTRY_STATISTICS.country_id = COUNTRY.country_ID;
+-- Literacy rate for a country - include countries without statistics because this is important info on if these countries
+-- need more resources from the UN 
 
--- Literacy rate among kids in every locality in a country using only their best score
+
+-- SELECT queries combining JOINs, aggregate functions, filtering, or grouping - 1
+
 SELECT AVG(LITERACY.score), school.locality_id
 FROM LITERACY
 INNER JOIN CLASS ON
@@ -67,6 +123,9 @@ WHERE LITERACY.score IN (SELECT MAX(LITERACY.score)
                         GROUP BY LITERACY.student_ID)  
 AND LOCALITY.country_id = 1                      
 GROUP BY SCHOOL.locality_id;
+-- USE CASE: What is the literacy rate for a particular area?
+-- Literacy rate among kids in every locality in a country using only their best score
+
 
 -- Select max literacy score of each student from this year in locality=1
 SELECT MAX(LITERACY.score), LITERACY.student_ID
@@ -79,18 +138,7 @@ WHERE school.locality_id = 1
 AND LITERACY.assessed_on >= '2026-01-01'
 GROUP BY LITERACY.student_ID;
 
--- 2.	Which schools have the lowest average literacy scores in a country?
-SELECT AVG(LITERACY.score) AS score, school.school_name
-FROM LITERACY
-LEFT JOIN CLASS ON
-literacy.class_id = class.class_id
-INNER JOIN SCHOOL ON 
-class.school_id = school.school_id
-INNER JOIN lOCALITY ON
-school.locality_id = school.locality_id
-WHERE locality.country_id = 1 
-GROUP BY school.school_name
-ORDER BY score DESC;
+
 
 -- 3.	What is the attendance ratio for boys vs girls in a locality?
 

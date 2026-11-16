@@ -47,6 +47,12 @@ INSERT INTO STUDENT (student_ID, first_name, last_name, date_of_birth, enrollmen
 (2, "Madeline", "Hester", '2012-10-09', 1, "Hearing Impaired", 8, "Female"),
 (3, "Max", "White", '2011-08-04', 1, "", 9, "Male");
 
+INSERT INTO GUARDIAN_PHONE (student_ID, phone_number) VALUES 
+(1, '14031234560'),
+(1, '15871234560'),
+(2, '14031234560'),
+(3, '15871112222');
+
 INSERT INTO class_student_takes (class_id, student_id, joined_on, left_on) VALUES
 (2, 1, "2025-09-01", "2026-06-30"),
 (1, 1, "2026-09-01", NULL),

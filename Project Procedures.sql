@@ -1,5 +1,7 @@
 USE ensf_608_project;
 
+-- Stored procedures, including at least one with an input parameter - 2
+
 DROP PROCEDURE IF EXISTS InsertUser;
 
 DELIMITER //
