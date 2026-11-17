@@ -7,7 +7,7 @@ USE ensf_608_project;
 
 -- INSERT Operations
 INSERT INTO USERS (user_ID, username, password_hash, email, first_name, last_name, user_type) VALUES
-(7, 'Taylor_S', 'abcdefg' ,'taylor.s@gmail.com', 'Taylor', 'Swift', 'Teacher User');
+(7, 'Taylor_S', 'abcdefg', 'taylor.s@gmail.com', 'Taylor', 'Swift', 'Teacher User');
 -- Create a new user called Taylor who can access and update the database as a teacher
 
 INSERT INTO TEACHER_USER (teacher_ID, qualification, hire_date, school_id) VALUES
@@ -60,6 +60,14 @@ WHERE GOALS.goal_status = "In Progress" OR "Pending";
 -- SELECT queries using ORDER BY, DISTINCT, or LIMIT - 2
 
 -- Get top 5 students in a country in a subjet- offer scholarships (Order By and Limit)
+
+
+SELECT FUNDING.*
+FROM FUNDING 
+WHERE FUNDING.school_id IS NULL
+ORDER BY FUNDING.amount DESC;
+-- Find all funding that hasn't already been awarded and list it by the total amount offered
+-- USE CASE: Apply for funding that will have the largest impact
 
 
 -- SELECT queries using aggregate functions (COUNT, SUM, AVG, MIN, MAX) - 3
@@ -129,8 +137,6 @@ COUNTRY_STATISTICS.country_id = COUNTRY.country_ID;
 -- Literacy rate for a country - include countries without statistics because this is important info on if these countries
 -- need more resources from the UN 
 
--- Find all funding using left join to identify which has been allocated and which hasn't
-
 
 -- SELECT queries combining JOINs, aggregate functions, filtering, or grouping - 1
 SELECT AVG(LITERACY.score), school.locality_id
@@ -148,18 +154,6 @@ AND LOCALITY.country_id = 1
 GROUP BY SCHOOL.locality_id;
 -- USE CASE: What is the literacy rate for a particular area?
 -- Literacy rate among kids in every locality in a country using only their best score
-
-
--- Select max literacy score of each student from this year in locality=1
-SELECT MAX(LITERACY.score), LITERACY.student_ID
-FROM LITERACY
-INNER JOIN CLASS ON
-LITERACY.class_id = class.class_id
-INNER JOIN SCHOOL ON 
-class.school_id = school.school_id
-WHERE school.locality_id = 1
-AND LITERACY.assessed_on >= '2026-01-01'
-GROUP BY LITERACY.student_ID;
 
 
 
