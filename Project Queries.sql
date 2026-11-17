@@ -4,7 +4,6 @@
 
 USE ensf_608_project;
 
-SELECT * FROM TEACHER_USER;
 
 -- INSERT Operations
 INSERT INTO USERS (user_ID, username, password_hash, email, first_name, last_name, user_type) VALUES
@@ -30,9 +29,8 @@ WHERE teacher_ID = 2;
 
 
 -- DELETE Operations
-
--- DELETE FROM GOVERNMENT_USER 
--- WHERE 
+DELETE FROM GOVERNMENT_USER 
+WHERE government_id = 1;
 -- Delete government user when they no longer work for the government
 
 DELETE FROM CLASS 
@@ -54,6 +52,11 @@ AND LITERACY.class_id = 2;
 -- View literacy scores in a specific range for a specific 
 -- USE CASE: Figure out which students failed - need more help, need to reattempt the exam
 
+SELECT GOALS.*
+FROM GOALS
+WHERE GOALS.goal_status = "In Progress" OR "Pending";
+-- 5.	What are the goals that are being worked on and their current progress?
+
 -- SELECT queries using ORDER BY, DISTINCT, or LIMIT - 2
 
 -- Get top 5 students in a country in a subjet- offer scholarships (Order By and Limit)
@@ -72,6 +75,17 @@ GROUP BY ATTENDANCE.student_ID;
 -- Get the number of times each student absent from the start of the school year in a specific school
 -- USE CASE: Calculate attendance and if some student are missing too much school
 
+-- SELECT MAX(LITERACY.score), LITERACY.student_ID
+-- FROM LITERACY
+-- INNER JOIN CLASS ON
+-- LITERACY.class_id = class.class_id
+-- INNER JOIN SCHOOL ON 
+-- class.school_id = school.school_id
+-- WHERE school.locality_id = 1
+-- AND LITERACY.assessed_on >= '2026-01-01'
+-- GROUP BY LITERACY.student_ID;
+-- Select max literacy score of each student from this year in locality=1
+
 -- SELECT queries using GROUP BY, including at least one with HAVING - 2
 SELECT AVG(LITERACY.score) AS score, school.school_name
 FROM LITERACY
@@ -85,6 +99,14 @@ WHERE locality.country_id = 1
 GROUP BY school.school_name
 ORDER BY score DESC;
 -- 2.	Which schools have the lowest average literacy scores in a country?
+
+SELECT class_id, COUNT(student_id) AS Num_Students
+FROM CLASS_STUDENT_TAKES
+WHERE class_student_takes.joined_on >= '2026-09-01'
+GROUP BY class_id
+HAVING Num_Students < 5;
+-- Find the classes that have less than 5 students enrolled in them for the current school year
+-- These localities may need additional resources to promote education and help enrolling students 
 
 
 -- SELECT queries using INNER JOIN - 3
@@ -107,9 +129,10 @@ COUNTRY_STATISTICS.country_id = COUNTRY.country_ID;
 -- Literacy rate for a country - include countries without statistics because this is important info on if these countries
 -- need more resources from the UN 
 
+-- Find all funding using left join to identify which has been allocated and which hasn't
+
 
 -- SELECT queries combining JOINs, aggregate functions, filtering, or grouping - 1
-
 SELECT AVG(LITERACY.score), school.locality_id
 FROM LITERACY
 INNER JOIN CLASS ON

@@ -9,7 +9,7 @@ CREATE TABLE USERS (
     user_ID             int not null AUTO_INCREMENT,
     username            varchar(30),
     password_hash       VARCHAR(64), 
-    email               varchar(255),
+    email               varchar(255) UNIQUE,
     first_name          varchar(100),
     last_name           varchar(100),
     user_type           ENUM('Government User', 'Teacher User', 'Admin'),
@@ -172,7 +172,7 @@ CREATE TABLE FUNDING_SOURCE (
 CREATE TABLE FUNDING (
     funding_no          int not null AUTO_INCREMENT,
     source_name         varchar(255),
-    source_sector       varchar(255),
+    -- source_sector       varchar(255),
     amount              long,
     currency            varchar(100),
     recieved_on         date,
