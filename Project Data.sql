@@ -104,14 +104,14 @@ VALUES
     (3, 4, 'absent', 'Very very sick');
 
 
- --goal test data
+ -- goal test data
 INSERT INTO GOALS
     (title, metric, baseline_value, target_value,
      goal_status, school_ID, government_ID)
 VALUES
     ('Improve school literacy',
      'Literacy rate (%)', 60, 80,
-     'In Progress', 1, 1),
+     'In Progress', 1, 3),
 
     ('Support student reading',
      'Literacy rate (%)', 50, 75,
