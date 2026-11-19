@@ -95,3 +95,9 @@ INSERT INTO FUNDING(source_name, amount, currency, recieved_on, purpose) VALUES
 -- INSERT INTO country_statistics(country_ID, statistics_year, male_pop, female_pop, gdp_per_capita, adult_literacy_rate) VALUES;
 -- INSERT INTO AWARDS(award_ID, award_name, awarding_body, category, awarded_on, award_description, school_ID) VALUES;
 -- INSERT INTO actionitem(actionitem_ID, title, item_description, item_status, due_date, completed_on, goal_ID, teacher_ID, student_ID, school_ID) VALUES;
+-- Hyunseong: additional attendance test data
+INSERT INTO ATTENDANCE
+    (student_id, session_id, attendance, absence_reason)
+VALUES
+    (3, 3, 'present', NULL),
+    (3, 4, 'absent', 'Very very sick');
