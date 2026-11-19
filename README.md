@@ -29,7 +29,7 @@ If that does not work, right click the Project Queries.sql file in VSCode's file
     SOURCE (copied filepath);
 
 
-To check if the database has been instantiated properlly and the data inside of it:
+To check if the database has been instantiated properly and the data inside of it:
 
 Use the command: 
 
