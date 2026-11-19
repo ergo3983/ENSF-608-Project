@@ -163,5 +163,20 @@ GROUP BY SCHOOL.locality_id;
 -- 4.	Which schools in this country received the most funding?
 
 
+SELECT c.country_name, sc.school_ID, sc.school_name, f.currency, SUM(f.amount) AS total_funding FROM FUNDING f
+JOIN SCHOOL sc
+    ON f.school_ID = sc.school_ID
+JOIN LOCALITY l
+    ON sc.locality_ID = l.locality_ID
+JOIN COUNTRY c
+    ON l.country_ID = c.country_ID
+WHERE c.country_name = 'CANADA'
+GROUP BY
+    c.country_name,
+    sc.school_ID,
+    sc.school_name,
+    f.currency;
+
+
 -- 5.	What are the goals that are being worked on and their current progress?
 
