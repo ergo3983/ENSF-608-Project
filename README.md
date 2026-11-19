@@ -2,7 +2,11 @@ To run the database file, use the command:
 
     mysql -u root -p < database.sql
 
-Then login using your MySQL password
+Then login using your MySQL password.
+
+Before running any further commands, enter into mysql using the command:
+
+    mysql -u root -p
 
 ---
 
