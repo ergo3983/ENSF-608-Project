@@ -110,7 +110,7 @@ ORDER BY score DESC;
 
 SELECT class_id, COUNT(student_id) AS Num_Students
 FROM CLASS_STUDENT_TAKES
-WHERE class_student_takes.joined_on >= '2026-09-01'
+WHERE class_student_takes.joined_on >= '2026-08-31'
 GROUP BY class_id
 HAVING Num_Students < 5;
 -- Find the classes that have less than 5 students enrolled in them for the current school year
