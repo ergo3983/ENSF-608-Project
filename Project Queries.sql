@@ -181,3 +181,24 @@ ORDER BY total_funding DESC;
 
 -- 5.	What are the goals that are being worked on and their current progress?
 
+
+
+
+
+--  Calculate the avg funding each school recieves
+
+SELECT s.school_name, f.currency, AVG(f.amount) AS total_amount FROM FUNDING f 
+JOIN SCHOOL s 
+    ON f.school_ID = s.school_ID
+    GROUP BY s.school_name, f.currency;
+
+
+
+-- Get the students that performed lowest on a specific assessment 
+
+
+SELECT s.first_name, s.last_name, MIN(ca.score) AS minimum_competency FROM COMPETENCY ca 
+JOIN STUDENT s 
+    ON ca.student_id = s.student_id
+WHERE ca.competency_id = 1
+GROUP BY s.first_name, s.last_name;
