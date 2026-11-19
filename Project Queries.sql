@@ -174,3 +174,69 @@ GROUP BY SCHOOL.locality_id;
 
 
 -- 3.	What is the attendance ratio for boys vs girls in a locality?
+
+
+-- 4.	Which schools in this country received the most funding?
+
+
+SELECT c.country_name, sc.school_ID, sc.school_name, f.currency, SUM(f.amount) AS total_funding FROM FUNDING f
+JOIN SCHOOL sc
+    ON f.school_ID = sc.school_ID
+JOIN LOCALITY l
+    ON sc.locality_ID = l.locality_ID
+JOIN COUNTRY c
+    ON l.country_ID = c.country_ID
+WHERE c.country_name = 'CANADA'
+GROUP BY
+    c.country_name,
+    sc.school_ID,
+    sc.school_name,
+    f.currency    
+ORDER BY total_funding DESC;
+
+
+-- 5.	What are the goals that are being worked on and their current progress?
+
+
+
+
+
+--  Calculate the avg funding each school recieves
+
+SELECT s.school_name, f.currency, AVG(f.amount) AS total_amount FROM FUNDING f 
+JOIN SCHOOL s 
+    ON f.school_ID = s.school_ID
+    GROUP BY s.school_name, f.currency;
+
+
+
+-- Get the students that performed lowest on a specific assessment 
+
+
+SELECT s.first_name, s.last_name, MIN(ca.score) AS minimum_competency FROM COMPETENCY ca 
+JOIN STUDENT s 
+    ON ca.student_id = s.student_id
+WHERE ca.competency_id = 1
+GROUP BY s.first_name, s.last_name;
+
+
+
+
+SELECT CONCAT(STUDENT.first_name, ' ', STUDENT.last_name) AS "Student Name", ACTIONITEM.item_description AS "Action items", ACTIONITEM.item_status AS "Action item status" 
+
+FROM ACTIONITEM 
+
+RIGHT JOIN STUDENT ON  
+
+STUDENT.student_id = ACTIONITEM.student_id 
+
+WHERE STUDENT.enrollment_status = TRUE AND STUDENT.disability_status != ''; 
+
+
+
+
+SELECT qualification, teacher_ID 
+
+FROM TEACHER_USER 
+
+WHERE qualification LIKE 'Master%'; 
