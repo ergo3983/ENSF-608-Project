@@ -54,7 +54,7 @@ AND LITERACY.class_id = 2;
 
 SELECT GOALS.*
 FROM GOALS
-WHERE GOALS.goal_status = "In Progress" OR "Pending";
+WHERE GOALS.goal_status IN ('In Progress', 'Pending');
 -- 5.	What are the goals that are being worked on and their current progress?
 
 -- SELECT queries using ORDER BY, DISTINCT, or LIMIT - 2
