@@ -202,3 +202,25 @@ JOIN STUDENT s
     ON ca.student_id = s.student_id
 WHERE ca.competency_id = 1
 GROUP BY s.first_name, s.last_name;
+
+
+
+
+SELECT CONCAT(STUDENT.first_name, ' ', STUDENT.last_name) AS "Student Name", ACTIONITEM.item_description AS "Action items", ACTIONITEM.item_status AS "Action item status" 
+
+FROM ACTIONITEM 
+
+RIGHT JOIN STUDENT ON  
+
+STUDENT.student_id = ACTIONITEM.student_id 
+
+WHERE STUDENT.enrollment_status = TRUE AND STUDENT.disability_status != ''; 
+
+
+
+
+SELECT qualification, teacher_ID 
+
+FROM TEACHER_USER 
+
+WHERE qualification LIKE 'Master%'; 
