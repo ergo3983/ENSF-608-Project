@@ -54,12 +54,25 @@ AND LITERACY.class_id = 2;
 
 SELECT GOALS.*
 FROM GOALS
-WHERE GOALS.goal_status = "In Progress" OR "Pending";
+WHERE GOALS.goal_status IN ("In Progress", "Pending");
 -- 5.	What are the goals that are being worked on and their current progress?
 
 -- SELECT queries using ORDER BY, DISTINCT, or LIMIT - 2
-
--- Get top 5 students in a country in a subjet- offer scholarships (Order By and Limit)
+-- 4.	Which schools in this country received the most funding?
+SELECT c.country_name, sc.school_ID, sc.school_name, f.currency, SUM(f.amount) AS total_funding FROM FUNDING f
+JOIN SCHOOL sc
+    ON f.school_ID = sc.school_ID
+JOIN LOCALITY l
+    ON sc.locality_ID = l.locality_ID
+JOIN COUNTRY c
+    ON l.country_ID = c.country_ID
+WHERE c.country_name = 'CANADA'
+GROUP BY
+    c.country_name,
+    sc.school_ID,
+    sc.school_name,
+    f.currency    
+ORDER BY total_funding DESC;
 
 
 SELECT FUNDING.*
@@ -83,16 +96,18 @@ GROUP BY ATTENDANCE.student_ID;
 -- Get the number of times each student absent from the start of the school year in a specific school
 -- USE CASE: Calculate attendance and if some student are missing too much school
 
--- SELECT MAX(LITERACY.score), LITERACY.student_ID
--- FROM LITERACY
--- INNER JOIN CLASS ON
--- LITERACY.class_id = class.class_id
--- INNER JOIN SCHOOL ON 
--- class.school_id = school.school_id
--- WHERE school.locality_id = 1
--- AND LITERACY.assessed_on >= '2026-01-01'
--- GROUP BY LITERACY.student_ID;
--- Select max literacy score of each student from this year in locality=1
+SELECT s.school_name, f.currency, AVG(f.amount) AS total_amount FROM FUNDING f 
+JOIN SCHOOL s 
+    ON f.school_ID = s.school_ID
+    GROUP BY s.school_name, f.currency;
+--  Calculate the avg funding each school recieves
+
+SELECT s.first_name, s.last_name, MIN(ca.score) AS minimum_competency FROM COMPETENCY ca 
+JOIN STUDENT s 
+    ON ca.student_id = s.student_id
+WHERE ca.competency_id = 1
+GROUP BY s.first_name, s.last_name;
+-- Get the students that performed lowest on a specific assessment 
 
 -- SELECT queries using GROUP BY, including at least one with HAVING - 2
 SELECT AVG(LITERACY.score) AS score, school.school_name
@@ -129,6 +144,7 @@ AND ATTENDANCE.attendance = 'absent';
 -- Get students that were absent on a specific date
 -- USE CASE: Contacting parents of students who are absent often
 
+
 -- SELECT queries using LEFT JOIN or RIGHT JOIN - 2
 SELECT COUNTRY.country_name, COUNTRY_STATISTICS.adult_literacy_rate 
 FROM COUNTRY
@@ -158,47 +174,3 @@ GROUP BY SCHOOL.locality_id;
 
 
 -- 3.	What is the attendance ratio for boys vs girls in a locality?
-
-
--- 4.	Which schools in this country received the most funding?
-
-
-SELECT c.country_name, sc.school_ID, sc.school_name, f.currency, SUM(f.amount) AS total_funding FROM FUNDING f
-JOIN SCHOOL sc
-    ON f.school_ID = sc.school_ID
-JOIN LOCALITY l
-    ON sc.locality_ID = l.locality_ID
-JOIN COUNTRY c
-    ON l.country_ID = c.country_ID
-WHERE c.country_name = 'CANADA'
-GROUP BY
-    c.country_name,
-    sc.school_ID,
-    sc.school_name,
-    f.currency    
-ORDER BY total_funding DESC;
-
-
--- 5.	What are the goals that are being worked on and their current progress?
-
-
-
-
-
---  Calculate the avg funding each school recieves
-
-SELECT s.school_name, f.currency, AVG(f.amount) AS total_amount FROM FUNDING f 
-JOIN SCHOOL s 
-    ON f.school_ID = s.school_ID
-    GROUP BY s.school_name, f.currency;
-
-
-
--- Get the students that performed lowest on a specific assessment 
-
-
-SELECT s.first_name, s.last_name, MIN(ca.score) AS minimum_competency FROM COMPETENCY ca 
-JOIN STUDENT s 
-    ON ca.student_id = s.student_id
-WHERE ca.competency_id = 1
-GROUP BY s.first_name, s.last_name;
