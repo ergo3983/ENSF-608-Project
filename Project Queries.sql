@@ -129,6 +129,20 @@ AND ATTENDANCE.attendance = 'absent';
 -- Get students that were absent on a specific date
 -- USE CASE: Contacting parents of students who are absent often
 
+-- Show a teacher's action items and the students receiving support
+SELECT
+    A.title AS activity,
+    CONCAT(U.first_name, ' ', U.last_name) AS teacher,
+    CONCAT(S.first_name, ' ', S.last_name) AS student
+FROM ACTIONITEM AS A
+INNER JOIN TEACHER_USER AS T
+    ON A.teacher_ID = T.teacher_ID
+INNER JOIN USERS AS U
+    ON T.teacher_ID = U.user_ID
+INNER JOIN STUDENT AS S
+    ON A.student_ID = S.student_ID
+WHERE A.teacher_ID = 4;
+
 -- SELECT queries using LEFT JOIN or RIGHT JOIN - 2
 SELECT COUNTRY.country_name, COUNTRY_STATISTICS.adult_literacy_rate 
 FROM COUNTRY

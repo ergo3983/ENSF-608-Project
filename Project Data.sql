@@ -116,3 +116,18 @@ VALUES
     ('Support student reading',
      'Literacy rate (%)', 50, 75,
      'Pending', 2, 5);
+
+ -- action item test data
+INSERT INTO ACTIONITEM
+    (title, item_description, item_status, due_date,
+     goal_ID, teacher_ID, student_ID, school_ID)
+VALUES
+    ('Reading practice for Amy',
+     'Provide weekly reading practice.',
+     'Pending', '2026-12-15',
+     1, 4, 1, 1),
+
+    ('Reading support for Max',
+     'Provide additional reading support.',
+     'Pending', '2026-12-15',
+     1, 4, 3, 1);
