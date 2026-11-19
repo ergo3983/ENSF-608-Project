@@ -177,8 +177,8 @@ CREATE TABLE FUNDING (
     currency            varchar(100),
     recieved_on         date,
     purpose             varchar(100),
-    school_ID           int,
-    award_ID            int,
+    school_ID           int NOT NULL,
+    award_ID            int NOT NULL,
 
     PRIMARY KEY (funding_no),
     FOREIGN KEY (school_ID) REFERENCES school(school_ID),
