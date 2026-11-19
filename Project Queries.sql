@@ -175,7 +175,8 @@ GROUP BY
     c.country_name,
     sc.school_ID,
     sc.school_name,
-    f.currency;
+    f.currency    
+ORDER BY total_funding DESC;
 
 
 -- 5.	What are the goals that are being worked on and their current progress?
