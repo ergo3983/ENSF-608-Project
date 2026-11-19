@@ -1,10 +1,3 @@
--- Changes I've made 
--- added teacher id and gov id
--- attendance should have date and attendance should be enum (present,absent)
--- Facilities should be added to school - 1 to 1 relationship, doesn't make sense for it to be a table
--- user_id in action _item table?
--- Added admin user type - permissions for access will be checked in code based on user type 
-
 DROP DATABASE IF EXISTS ENSF_608_Project;
 
 CREATE DATABASE ENSF_608_Project;
@@ -16,7 +9,7 @@ CREATE TABLE USERS (
     user_ID             int not null AUTO_INCREMENT,
     username            varchar(30),
     password_hash       VARCHAR(64), 
-    email               varchar(255),
+    email               varchar(255) UNIQUE,
     first_name          varchar(100),
     last_name           varchar(100),
     user_type           ENUM('Government User', 'Teacher User', 'Admin'),
@@ -24,15 +17,50 @@ CREATE TABLE USERS (
     PRIMARY KEY (user_ID)
 );
 
+-- COUNTRY
+CREATE TABLE COUNTRY (
+    country_ID          int not null AUTO_INCREMENT,
+    country_name        varchar(100),
+    PRIMARY KEY (country_ID)
+);
+
+CREATE TABLE COUNTRY_STATISTICS (
+    country_ID          int,
+    statistics_year     int,
+    male_pop            BIGINT,
+    female_pop          BIGINT,
+    gdp_per_capita      float,
+    adult_literacy_rate float,
+
+    PRIMARY KEY (country_ID, statistics_year),
+    FOREIGN KEY (country_ID) REFERENCES COUNTRY(country_ID)
+);
+
+-- LOCALITY
+CREATE TABLE LOCALITY (
+    locality_ID             int not null AUTO_INCREMENT,
+    locality_name           varchar(100),
+    area_type               varchar(50),
+    statistics_year         year,
+    school_age_pop_boys     int,
+    school_age_pop_girls    int,
+    country_ID              int not NULL,
+
+    PRIMARY KEY (locality_ID),
+    FOREIGN KEY (country_ID) REFERENCES country(country_ID)
+);
+
 -- GOVERNMENT USERS
 CREATE TABLE GOVERNMENT_USER (
     government_ID       int NOT NULL,
     -- user_ID             int,
     department          varchar(200),
-    job_title           varchar(200),   
+    job_title           varchar(200),
+    country_ID          int,   
 
     PRIMARY KEY(government_ID),   
-    FOREIGN KEY (government_ID) REFERENCES users(user_ID)
+    FOREIGN KEY (government_ID) REFERENCES users(user_ID),
+    FOREIGN KEY(country_ID) REFERENCES country(country_ID)
 );
 
 -- SCHOOL
@@ -47,9 +75,10 @@ CREATE TABLE SCHOOL (
     internet            BOOLEAN,
     drinking_water      BOOLEAN,
     toilets             BOOLEAN,
--- locality_ID at bottom
+    locality_id         int,
 
-    PRIMARY KEY (school_ID)
+    PRIMARY KEY (school_ID),
+    FOREIGN KEY (locality_id) REFERENCES Locality(locality_id)
 );
 
 -- TEACHER USERS
@@ -118,39 +147,6 @@ CREATE TABLE CLASS_STUDENT_TAKES (
     FOREIGN KEY (student_ID) REFERENCES STUDENT(student_ID)
 );
 
--- COUNTRY
-CREATE TABLE COUNTRY (
-    country_ID          int not null AUTO_INCREMENT,
-    country_name        varchar(100),
-    PRIMARY KEY (country_ID)
-);
-
-CREATE TABLE COUNTRY_STATISTICS (
-    country_ID          int,
-    statistics_year     int,
-    male_pop            BIGINT,
-    female_pop          BIGINT,
-    gdp_per_capita      float,
-    adult_literacy_rate float,
-
-    PRIMARY KEY (country_ID, statistics_year),
-    FOREIGN KEY (country_ID) REFERENCES COUNTRY(country_ID)
-);
-
--- LOCALITY
-CREATE TABLE LOCALITY (
-    locality_ID             int not null AUTO_INCREMENT,
-    locality_name           varchar(100),
-    area_type               varchar(50),
-    statistics_year         year,
-    school_age_pop_boys     int,
-    school_age_pop_girls    int,
-    country_ID              int not NULL,
-
-    PRIMARY KEY (locality_ID),
-    FOREIGN KEY (country_ID) REFERENCES country(country_ID)
-);
-
 -- AWARDS
 CREATE TABLE AWARDS (
     award_ID            int not null AUTO_INCREMENT,
@@ -176,7 +172,7 @@ CREATE TABLE FUNDING_SOURCE (
 CREATE TABLE FUNDING (
     funding_no          int not null AUTO_INCREMENT,
     source_name         varchar(255),
-    source_sector       varchar(255),
+    -- source_sector       varchar(255),
     amount              long,
     currency            varchar(100),
     recieved_on         date,
@@ -250,7 +246,7 @@ CREATE TABLE REMINDERS (
 -- Normalization table
 -- Exam info
 CREATE TABLE COMPETENCY_ASSESSMENT (
-    assessment_code      int,
+    assessment_code     VARCHAR(50),
     max_score           int,
     proficiency_cutoff  int,
 
@@ -261,11 +257,9 @@ CREATE TABLE COMPETENCY_ASSESSMENT (
 -- Describes the students attempt at a standardized competency test
 CREATE TABLE COMPETENCY (
     competency_ID       int not null AUTO_INCREMENT,
-    assessment_code     int,
+    assessment_code     VARCHAR(50),
     attempt_no          int,
     score               int,
-    -- max_score           int,
-    -- proficiency_cutoff  int,
     assessed_on         date,
     class_ID            int,
     student_ID          int,
@@ -291,22 +285,23 @@ CREATE TABLE SESSION (
     FOREIGN KEY (class_ID) REFERENCES class(class_ID)
 );
 
-CREATE TABLE STUDENT_SESSION_TAKES (
-    student_ID      int,
-    session_ID      int,
-    absence_reason  varchar(100),
+-- CREATE TABLE STUDENT_SESSION_TAKES (
+--     student_ID      int,
+--     session_ID      int,
+--     absence_reason  varchar(100),
 
-    PRIMARY KEY(student_id, session_id),
-    FOREIGN KEY(student_ID) REFERENCES student(student_ID),
-    FOREIGN KEY(session_id) REFERENCES session(session_ID)
-);
+--     PRIMARY KEY(student_id, session_id),
+--     FOREIGN KEY(student_ID) REFERENCES student(student_ID),
+--     FOREIGN KEY(session_id) REFERENCES session(session_ID)
+-- );
 
 -- ATTENDANCE
 CREATE TABLE ATTENDANCE (
     student_ID      int,
     session_ID      int,
     attendance      ENUM('present', 'absent'),
-    attendance_date DATE,
+    -- attendance_date DATE,
+    absence_reason  varchar(100), 
 
     PRIMARY KEY(student_ID, session_ID),
     FOREIGN KEY(student_ID) REFERENCES student(student_ID),
@@ -316,8 +311,8 @@ CREATE TABLE ATTENDANCE (
 -- LITERACY_ASSESSMENT - Normalization
 -- Describes the test 
 CREATE TABLE LITERACY_ASSESSMENT (
-    assessment_code     int,
-    max_score           int,    -- Max score of a student over multiple attempts?
+    assessment_code     VARCHAR(50),
+    max_score           int,   
     literacy_cutoff     int,
 
     PRIMARY KEY(assessment_code)
@@ -331,7 +326,7 @@ CREATE TABLE LITERACY (
     assessed_on         date,
     attempt_no          int,
     score               int,
-    assessment_code     int,
+    assessment_code     VARCHAR(50),
     class_ID            int,
     student_ID          int,
 
@@ -340,13 +335,3 @@ CREATE TABLE LITERACY (
     FOREIGN KEY (student_ID) REFERENCES student(student_ID),
     FOREIGN KEY (assessment_code) REFERENCES literacy_assessment(assessment_code)
 );
-
-
--- Add foreign key relations that break table order
-ALTER TABLE School
-    ADD(locality_id int, FOREIGN KEY (locality_id) REFERENCES Locality(locality_id));
-
-ALTER TABLE GOVERNMENT_USER
-    ADD (country_ID int, FOREIGN KEY(country_ID) REFERENCES country(country_ID));
-
-
