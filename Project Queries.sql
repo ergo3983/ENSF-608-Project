@@ -4,7 +4,6 @@
 
 USE ensf_608_project;
 
-
 -- INSERT Operations
 INSERT INTO USERS (user_ID, username, password_hash, email, first_name, last_name, user_type) VALUES
 (7, 'Taylor_S', 'abcdefg', 'taylor.s@gmail.com', 'Taylor', 'Swift', 'Teacher User');
@@ -94,19 +93,21 @@ INNER JOIN STUDENT ON
 ATTENDANCE.student_ID = STUDENT.student_ID
 INNER JOIN SESSION ON
 ATTENDANCE.session_ID = SESSION.session_ID
-WHERE SESSION.session_date > '2025-09-01'
+WHERE SESSION.session_date > '2026-08-30'
 AND ATTENDANCE.attendance = 'absent'
 GROUP BY ATTENDANCE.student_ID;
 -- Get the number of times each student absent from the start of the school year in a specific school
 -- USE CASE: Calculate attendance and if some student are missing too much school
 
-SELECT s.school_name, f.currency, AVG(f.amount) AS total_amount FROM FUNDING f 
+SELECT s.school_name, f.currency, AVG(f.amount) AS total_amount 
+FROM FUNDING f 
 JOIN SCHOOL s 
     ON f.school_ID = s.school_ID
     GROUP BY s.school_name, f.currency;
 --  Calculate the avg funding each school receives
 
-SELECT s.first_name, s.last_name, MIN(ca.score) AS minimum_competency FROM COMPETENCY ca 
+SELECT s.first_name, s.last_name, MIN(ca.score) AS minimum_competency 
+FROM COMPETENCY ca 
 JOIN STUDENT s 
     ON ca.student_id = s.student_id
 WHERE ca.competency_id = 1
@@ -124,7 +125,7 @@ INNER JOIN lOCALITY ON
 school.locality_id = locality.locality_id
 WHERE locality.country_id = 1 
 GROUP BY school.school_name
-ORDER BY score DESC;
+ORDER BY score;
 -- 2.	Which schools have the lowest average literacy scores in a country?
 
 SELECT class_id, COUNT(student_id) AS Num_Students
@@ -133,7 +134,7 @@ WHERE class_student_takes.joined_on >= '2026-08-31'
 GROUP BY class_id
 HAVING Num_Students < 5;
 -- Find the classes that have less than 5 students enrolled in them for the current school year
--- These localities may need additional resources to promote education and help enrolling students 
+-- These schools may need additional resources to promote education and help enrolling students 
 
 
 -- SELECT queries using INNER JOIN - 3
@@ -148,16 +149,34 @@ AND ATTENDANCE.attendance = 'absent';
 -- Get students that were absent on a specific date
 -- USE CASE: Contacting parents of students who are absent often
 
+SELECT DISTINCT STUDENT.*, LOCALITY.locality_name, COUNTRY.country_name
+FROM STUDENT
+LEFT JOIN class_student_takes ON 
+student.student_ID = class_student_takes.student_ID
+INNER JOIN CLASS ON
+class_student_takes.class_id = CLASS.class_ID
+INNER JOIN SCHOOL ON 
+CLASS.school_ID = SCHOOL.school_ID
+INNER JOIN LOCALITY ON 
+SCHOOL.locality_ID = LOCALITY.locality_ID
+INNER JOIN COUNTRY ON 
+LOCALITY.country_ID = COUNTRY.country_ID;
+-- Get Locality and country of each student
+
 SELECT CLASS.class_name, CONCAT(STUDENT.first_name, ' ', STUDENT.last_name) AS student_name, GUARDIAN_PHONE.phone_number
-FROM CLASS INNER JOIN CLASS_STUDENT_TAKES ON CLASS.class_ID = CLASS_STUDENT_TAKES.class_ID 
-INNER JOIN STUDENT ON CLASS_STUDENT_TAKES.student_ID = STUDENT.student_ID 
-INNER JOIN GUARDIAN_PHONE ON STUDENT.student_ID = GUARDIAN_PHONE.student_ID 
+FROM CLASS 
+INNER JOIN CLASS_STUDENT_TAKES ON 
+CLASS.class_ID = CLASS_STUDENT_TAKES.class_ID 
+INNER JOIN STUDENT ON 
+CLASS_STUDENT_TAKES.student_ID = STUDENT.student_ID 
+INNER JOIN GUARDIAN_PHONE ON 
+STUDENT.student_ID = GUARDIAN_PHONE.student_ID 
 WHERE CLASS.teacher_ID = 2 AND CLASS.academic_year = 2026 AND CLASS_STUDENT_TAKES.left_on IS NULL 
 ORDER BY CLASS.class_name, student_name;
-
+-- Get guardian phone numbers of the students in a specific teacher’s classes for the current school year 
 
 -- SELECT queries using LEFT JOIN or RIGHT JOIN - 2
-SELECT COUNTRY.country_name, COUNTRY_STATISTICS.adult_literacy_rate 
+SELECT COUNTRY.country_name, COUNTRY_STATISTICS.statistics_year, COUNTRY_STATISTICS.adult_literacy_rate
 FROM COUNTRY
 LEFT JOIN country_statistics ON
 COUNTRY_STATISTICS.country_id = COUNTRY.country_ID;
@@ -169,6 +188,7 @@ FROM ACTIONITEM
 RIGHT JOIN STUDENT ON  
 STUDENT.student_id = ACTIONITEM.student_id 
 WHERE STUDENT.enrollment_status = TRUE AND STUDENT.disability_status != ''; 
+-- Find all students with disabilities who have actions items
 
 -- SELECT queries combining JOINs, aggregate functions, filtering, or grouping - 1
 SELECT AVG(LITERACY.score), school.locality_id
@@ -187,10 +207,5 @@ GROUP BY SCHOOL.locality_id;
 -- USE CASE: What is the literacy rate for a particular area?
 -- Literacy rate among kids in every locality in a country using only their best score
 
-
-
--- 3.	What is the attendance ratio for boys vs girls in a locality?
-
-
-
-
+-- 3.	What is the attendance ratio for boys vs girls in a locality?  
+    
