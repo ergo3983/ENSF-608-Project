@@ -36,11 +36,11 @@ INSERT INTO CLASS (class_ID, class_name, subject_name, school_ID, teacher_ID) VA
 (2, "ENG 8", "ENGLISH", 1, 2),
 (3, "URDU 9", "URDU", 2, 4);
 
-INSERT INTO SESSION (session_id, session_date, start_time, end_time, topic, session_status, attendance_finalized_at, class_ID) VALUE 
-(1, "2025-09-01", "8:15", "9:30", "Intro to MATH 8", "Completed", "2025-09-02", "2"),
-(2, "2025-09-02", "8:15", "9:30", "Review MATH 7", "Completed", "2025-09-03", "2"),
-(3, "2026-09-01", "8:15", "9:30", "Intro to MATH 9", "Completed", "2026-09-02", "1"), 
-(4, "2026-09-02", "8:15", "9:30", "Review MATH 8", "Completed", "2026-09-03", "1");
+INSERT INTO SESSION (session_id, session_date, topic, session_status, attendance_finalized_at, class_ID) VALUE 
+(1, "2025-09-01", "Intro to MATH 8", "Completed", "2025-09-02", "2"),
+(2, "2025-09-02", "Review MATH 7", "Completed", "2025-09-03", "2"),
+(3, "2026-09-01", "Intro to MATH 9", "Completed", "2026-09-02", "1"), 
+(4, "2026-09-02", "Review MATH 8", "Completed", "2026-09-03", "1");
 
 INSERT INTO STUDENT (student_ID, first_name, last_name, date_of_birth, enrollment_status, disability_status, grade_level, gender) VALUES
 (1, "Amy", "Black", '2011-09-04', 1, "", 9, "Female"),
@@ -73,14 +73,14 @@ INSERT INTO competency_assessment (assessment_code, max_score, proficiency_cutof
 ("MATH-8-2026", 200, 120),
 ("MATH-9-2027", 150, 100);
 
-INSERT INTO competency (competency_id, assessment_code, attempt_no, score, assessed_on, class_id, student_id) VALUES
-(1, "MATH-8-2026", 1, 100, "2026-06-20", 2, 1),
-(2, "MATH-8-2026", 2, 180, "2026-08-20", 2, 1);
+INSERT INTO competency (competency_id, assessment_code, attempt_no, score, class_id, student_id) VALUES
+(1, "MATH-8-2026", 1, 100, 2, 1),
+(2, "MATH-8-2026", 2, 180, 2, 1);
 
-INSERT INTO LITERACY (literacy_id, assessment_code, attempt_no, score, assessed_on, class_id, student_id) VALUES
-(1, "ENG-8-2026", 1, 100, "2026-06-18", 2, 1),
-(2, "ENG-8-2026", 1, 50, "2026-06-18", 2, 3),
-(3, "ENG-8-2026", 2, 120, "2026-08-18", 2, 3);
+INSERT INTO LITERACY (literacy_id, assessment_code, attempt_no, score, class_id, student_id) VALUES
+(1, "ENG-8-2026", 1, 100, 2, 1),
+(2, "ENG-8-2026", 1, 50, 2, 3),
+(3, "ENG-8-2026", 2, 120, 2, 3);
 
 INSERT INTO funding_source(source_name, source_sector) VALUES
 ("UN", "Literacy"),
@@ -90,9 +90,9 @@ INSERT INTO AWARDS(award_ID, award_name, awarding_body, category, awarded_on, aw
 (1, 'Outsanding Performance Award', 'Government of Canada', 'Academics', '2026-11-10 12:00:00', 'Award issued for students with exemplary performance in academics', 2),
 (2, 'Community Outreach Award', 'Government of Canada', 'Community Service', '2026-11-20 12:00:00', 'Award issued for students with an overwhelming amount of community service', 1);
 
-INSERT INTO FUNDING(source_name, amount, currency, received_on, purpose, school_ID, award_ID) VALUES
-("UN", 100000, "USD", "2026-06-01", "Promote literacy", 1, 1),
-("USAID", 1000000, "USD", "2026-01-30", "Increase litearcy among school aged children", 2, 2);
+INSERT INTO FUNDING(source_id, amount, currency, received_on, purpose, school_ID, award_ID) VALUES
+(1, 100000, "USD", "2026-06-01", "Promote literacy", 1, 1),
+(2, 1000000, "USD", "2026-01-30", "Increase litearcy among school aged children", 2, 2);
 
 INSERT INTO GOALS (goal_ID, title, sdg_target, cohort_definition, baseline_value, metric, target_value, due_date, goal_status, school_ID, government_ID) VALUES
 (1, 'Improve Grade 9 Mathematics Performance', 'SDG 4.1', 'All Grade 9 students at Langevin', 65, 'Average Mathematics Score', 85, '2027-06-30', 'In Progress', 1, 1),
