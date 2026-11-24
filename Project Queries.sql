@@ -7,7 +7,7 @@ USE ensf_608_project;
 -- INSERT Operations
 INSERT INTO USERS (user_ID, username, password_hash, email, first_name, last_name, user_type) VALUES
 (7, 'Taylor_S', 'abcdefg', 'taylor.s@gmail.com', 'Taylor', 'Swift', 'Teacher User');
--- Create a new user called Taylor who can access and update the database as a teacher
+-- Create a new user called Taylor who can access the web application
 
 INSERT INTO TEACHER_USER (teacher_ID, qualification, hire_date, school_id) VALUES
 (7, 'Teaching License', '2020-09-20', 1);
@@ -26,13 +26,17 @@ SET qualification = "Masters in Education"
 WHERE teacher_ID = 2;
 -- Update teacher qulaifications when teacher updates their qualifications
 
-
 -- DELETE Operations
-DELETE FROM GOVERNMENT_USER 
-WHERE government_id = 1;
--- Delete government user when they no longer work for the government
 
-DELETE FROM CLASS 
+-- UPDATE GOALS
+-- SET government_ID = 3
+-- WHERE government_ID = 1;
+
+-- DELETE FROM government_user
+-- WHERE government_ID = 1;
+-- Delete government user when they no longer work for the government, update all foreign key constraints before deleting (assign goals to a different government worker)
+
+DELETE FROM CLASS
 WHERE class_id = 3 and school_id = 2;
 -- Remove a class when it is no longer offered at the school
 
@@ -56,9 +60,11 @@ FROM GOALS
 WHERE GOALS.goal_status IN ("In Progress", "Pending");
 -- 5.	What are the goals that are being worked on and their current progress?
 
+
 SELECT qualification, teacher_ID 
 FROM TEACHER_USER 
 WHERE qualification LIKE 'Master%'; 
+-- Views all teachers with a Master’s degree, in any field.
 
 -- SELECT queries using ORDER BY, DISTINCT, or LIMIT - 2
 
@@ -78,8 +84,10 @@ GROUP BY
 ORDER BY total_funding DESC;
 -- 4.	Which schools in this country received the most funding?
 
-SELECT FUNDING.*
-FROM FUNDING 
+SELECT FUNDING_SOURCE.source_name, FUNDING_SOURCE.source_sector, FUNDING.*
+FROM FUNDING
+INNER JOIN FUNDING_SOURCE ON
+FUNDING.source_id = FUNDING_SOURCE.source_id
 WHERE FUNDING.school_id IS NULL
 ORDER BY FUNDING.amount DESC;
 -- Find all funding that hasn't already been awarded and list it by the total amount offered
@@ -191,8 +199,10 @@ WHERE STUDENT.enrollment_status = TRUE AND STUDENT.disability_status != '';
 -- Find all students with disabilities who have actions items
 
 -- SELECT queries combining JOINs, aggregate functions, filtering, or grouping - 1
-SELECT AVG(LITERACY.score), school.locality_id
+SELECT AVG(LITERACY.score), school.locality_id, LITERACY_ASSESSMENT.assessment_code
 FROM LITERACY
+INNER JOIN literacy_assessment ON 
+LITERACY.assessment_code = LITERACY_ASSESSMENT.assessment_code
 INNER JOIN CLASS ON
 LITERACY.class_id = class.class_id
 INNER JOIN SCHOOL ON 
@@ -202,10 +212,9 @@ school.locality_id = locality.locality_id
 WHERE LITERACY.score IN (SELECT MAX(LITERACY.score)
                         FROM LITERACY
                         GROUP BY LITERACY.student_ID)  
-AND LOCALITY.country_id = 1                      
-GROUP BY SCHOOL.locality_id;
+AND LOCALITY.country_id = 1
+GROUP BY SCHOOL.locality_id, LITERACY_ASSESSMENT.assessment_code;
 -- USE CASE: What is the literacy rate for a particular area?
--- Literacy rate among kids in every locality in a country using only their best score
+-- Literacy rate among kids in a specific grade in every locality in a country using only their best score
 
--- 3.	What is the attendance ratio for boys vs girls in a locality?  
-    
+-- 3.	What is the attendance ratio for boys vs girls in a locality?

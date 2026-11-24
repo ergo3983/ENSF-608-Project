@@ -215,7 +215,6 @@ CREATE TABLE ACTIONITEM (
     due_date            datetime,
     completed_on        date,
     goal_ID             int,
-    -- user_ID             int,
     teacher_ID          int,
     student_ID          int,
     school_ID           int,
@@ -244,6 +243,7 @@ CREATE TABLE REMINDERS (
     FOREIGN KEY (user_ID) REFERENCES users(user_id)
 );
 
+-- COMPETENCY_ASSESSMENT
 -- Normalization table
 -- Exam info
 CREATE TABLE COMPETENCY_ASSESSMENT (
@@ -256,13 +256,12 @@ CREATE TABLE COMPETENCY_ASSESSMENT (
 );
 
 -- COMPETENCY
--- Describes the students attempt at a standardized competency test
+-- Describes the students attempt at a standardized competency test (Math, science, social studies, history)
 CREATE TABLE COMPETENCY (
     competency_ID       int not null AUTO_INCREMENT,
     assessment_code     VARCHAR(50),
     attempt_no          int,
     score               int,
-    -- assessed_on         date,
     class_ID            int,
     student_ID          int,
     
@@ -273,11 +272,10 @@ CREATE TABLE COMPETENCY (
 );
 
 -- SESSION
+-- Describes a specific class, including the topic for the class
 CREATE TABLE SESSION (
     session_ID          int not null AUTO_INCREMENT,
     session_date        date,
-    -- start_time          time,
-    -- end_time            time,
     topic               varchar(100),
     session_status      ENUM('Scheduled', 'In Progress', 'Completed'),
     attendance_finalized_at date,
@@ -287,22 +285,11 @@ CREATE TABLE SESSION (
     FOREIGN KEY (class_ID) REFERENCES class(class_ID)
 );
 
--- CREATE TABLE STUDENT_SESSION_TAKES (
---     student_ID      int,
---     session_ID      int,
---     absence_reason  varchar(100),
-
---     PRIMARY KEY(student_id, session_id),
---     FOREIGN KEY(student_ID) REFERENCES student(student_ID),
---     FOREIGN KEY(session_id) REFERENCES session(session_ID)
--- );
-
 -- ATTENDANCE
 CREATE TABLE ATTENDANCE (
     student_ID      int,
     session_ID      int,
     attendance      ENUM('present', 'absent'),
-    -- attendance_date DATE,
     absence_reason  varchar(100), 
 
     PRIMARY KEY(student_ID, session_ID),
@@ -326,7 +313,6 @@ CREATE TABLE LITERACY_ASSESSMENT (
 -- Describes the students attempt at a standardized literacy test
 CREATE TABLE LITERACY (
     literacy_ID         int not null AUTO_INCREMENT,
-    -- assessed_on         date,
     attempt_no          int,
     score               int,
     assessment_code     VARCHAR(50),
