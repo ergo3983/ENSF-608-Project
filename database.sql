@@ -52,7 +52,6 @@ CREATE TABLE LOCALITY (
 -- GOVERNMENT USERS
 CREATE TABLE GOVERNMENT_USER (
     government_ID       int NOT NULL,
-    -- user_ID             int,
     department          varchar(200),
     job_title           varchar(200),
     country_ID          int,   
@@ -82,7 +81,6 @@ CREATE TABLE SCHOOL (
 -- TEACHER USERS
 CREATE TABLE TEACHER_USER (
     teacher_ID          int NOT NULL, 
-    -- user_ID             int,
     qualification       varchar(200),
     hire_date           date,
     school_ID           int,
