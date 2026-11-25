@@ -28,12 +28,12 @@ WHERE teacher_ID = 2;
 
 -- DELETE Operations
 
--- UPDATE GOALS
--- SET government_ID = 3
--- WHERE government_ID = 1;
+UPDATE GOALS
+SET government_ID = 3
+WHERE government_ID = 1;
 
--- DELETE FROM government_user
--- WHERE government_ID = 1;
+DELETE FROM government_user
+WHERE government_ID = 1;
 -- Delete government user when they no longer work for the government, update all foreign key constraints before deleting (assign goals to a different government worker)
 
 DELETE FROM CLASS
@@ -107,6 +107,14 @@ GROUP BY ATTENDANCE.student_ID;
 -- Get the number of times each student absent from the start of the school year in a specific school
 -- USE CASE: Calculate attendance and if some student are missing too much school
 
+SELECT COUNT(AWARDS.award_id) AS Num_Awards, SCHOOL.school_name
+FROM AWARDS 
+INNER JOIN SCHOOL ON 
+AWARDS.school_id = SCHOOL.school_id
+GROUP BY SCHOOL.school_name
+ORDER BY Num_Awards DESC;
+-- Find the number of awards awarded to each school
+
 SELECT s.school_name, f.currency, AVG(f.amount) AS total_amount 
 FROM FUNDING f 
 JOIN SCHOOL s 
@@ -114,13 +122,14 @@ JOIN SCHOOL s
     GROUP BY s.school_name, f.currency;
 --  Calculate the avg funding each school receives
 
-SELECT s.first_name, s.last_name, MIN(ca.score) AS minimum_competency 
+SELECT s.first_name, s.last_name, ca.score
 FROM COMPETENCY ca 
 JOIN STUDENT s 
     ON ca.student_id = s.student_id
 WHERE ca.competency_id = 1
-GROUP BY s.first_name, s.last_name;
--- Get the students that performed lowest on a specific assessment 
+AND ca.score = (SELECT MAX(ca.score) FROM COMPETENCY ca WHERE ca.competency_id = 1);
+-- Get the students that performed best on a specific assessment 
+
 
 -- SELECT queries using GROUP BY, including at least one with HAVING - 2
 SELECT AVG(LITERACY.score) AS score, school.school_name
@@ -217,4 +226,46 @@ GROUP BY SCHOOL.locality_id, LITERACY_ASSESSMENT.assessment_code;
 -- USE CASE: What is the literacy rate for a particular area?
 -- Literacy rate among kids in a specific grade in every locality in a country using only their best score
 
--- 3.	What is the attendance ratio for boys vs girls in a locality?
+
+-- Stored procedures, including at least one with an input parameter
+DROP PROCEDURE IF EXISTS InsertUser;
+
+DELIMITER //
+CREATE PROCEDURE InsertUser(
+    IN username            varchar(30),
+    IN password_hash       VARCHAR(64), 
+    IN email               varchar(255),
+    IN first_name          varchar(100),
+    IN last_name           varchar(100),
+    IN user_type           ENUM('Government User', 'Teacher User', 'Admin')
+)
+BEGIN
+    INSERT INTO USERS (username, password_hash, email, first_name, last_name, user_type) VALUES
+    (username, password_hash, email, first_name, last_name, user_type);
+END //
+DELIMITER ;
+
+CALL InsertUser('Jack_Black', '123456', 'jack@gmail.com', 'Jack', 'Black', 'Teacher User');
+-- Stored procedure to create new user
+
+DROP PROCEDURE IF EXISTS GetUserID;
+
+DELIMITER //
+CREATE PROCEDURE GetUserID(
+    IN email varchar(255),
+    OUT userID INT
+)
+BEGIN
+    SELECT USERS.user_ID INTO userID
+    FROM USERS
+    WHERE USERS.email = email;
+END //
+DELIMITER ;
+
+CALL GetUserID('jack@gmail.com', @t);
+SELECT @t;
+
+-- Stored procedure to retrieve user id based on email
+-- User ID is needed to create references in other tables and is not something that would be known before insertion
+-- Its value should also not be controlled through the front-end to prevent primary key errors or overwrites. 
+

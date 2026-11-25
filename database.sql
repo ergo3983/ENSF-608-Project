@@ -4,7 +4,6 @@ CREATE DATABASE ENSF_608_Project;
 USE ENSF_608_Project;
 
 -- USERS
--- SHA256 hash creates a 64 character hash 
 CREATE TABLE USERS (
     user_ID             int not null AUTO_INCREMENT,
     username            varchar(30),
@@ -12,7 +11,7 @@ CREATE TABLE USERS (
     email               varchar(255) UNIQUE,
     first_name          varchar(100),
     last_name           varchar(100),
-    user_type           ENUM('Government User', 'Teacher User', 'Admin'),
+    user_type           ENUM('Government User', 'Teacher User', 'UN User', 'Admin'),
     
     PRIMARY KEY (user_ID)
 );
@@ -64,7 +63,6 @@ CREATE TABLE GOVERNMENT_USER (
 );
 
 -- SCHOOL
--- locality id foreign key added at bottom
 CREATE TABLE SCHOOL (
     school_ID           int not null AUTO_INCREMENT,
     school_name         varchar(100),
@@ -95,8 +93,6 @@ CREATE TABLE TEACHER_USER (
 );
 
 -- STUDENT
--- Enrollement status should be binary, enrolled - 1, not enrolled - 0
--- Disability status - varchar - lots of diabilities with unique needs
 CREATE TABLE STUDENT (
     student_ID          int not null AUTO_INCREMENT,
     first_name          varchar(100),
@@ -136,6 +132,7 @@ CREATE TABLE CLASS (
     FOREIGN KEY (teacher_id) REFERENCES Teacher_User(teacher_id)
 );
 
+-- CLASS_STUDENT_TAKES
 CREATE TABLE CLASS_STUDENT_TAKES (
     class_ID    INT,
     student_ID  INT,
