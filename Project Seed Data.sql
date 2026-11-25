@@ -51,6 +51,8 @@
 --      2025-09-02 (Amy Black: 'Medical appointment'), and 3 LITERACY rows of class 2 have
 --      score <= 50.
 
+-- AI assisted creation of data
+
 USE ENSF_608_Project;
 
 SET autocommit = 0;

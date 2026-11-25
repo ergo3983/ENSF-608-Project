@@ -1,3 +1,5 @@
+-- Manually created input data
+
 USE ENSF_608_Project;
 
 -- Users test data 
