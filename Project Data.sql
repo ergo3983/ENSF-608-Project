@@ -1,3 +1,5 @@
+-- Manually created input data
+
 USE ENSF_608_Project;
 
 -- Users test data 
@@ -10,9 +12,7 @@ INSERT INTO USERS (user_ID, username, email, first_name, last_name, user_type) V
 
 INSERT INTO COUNTRY (country_ID, country_name) VALUE
 (1, "CANADA"),
-(2, "PAKISTAN"),
-(3, "AUSTRALIA"),
-(4, "UNITEDSTATES");
+(2, "PAKISTAN");
 
 -- Users test data 
 INSERT INTO GOVERNMENT_USER (government_ID, department, job_title, country_id) VALUES
@@ -22,16 +22,11 @@ INSERT INTO GOVERNMENT_USER (government_ID, department, job_title, country_id) V
 
 INSERT INTO LOCALITY (locality_name, country_ID) VALUE
 ("AB-CAL-DT", 1),
-("SI-KAR-SP", 2),
-("AU-NSW-BG", 3),
-("US-FLO-MI", 4);
+("SI-KAR-SP", 2);
 
 INSERT INTO SCHOOL (school_ID, school_name, education_level, locality_id) VALUE
 (1, "Langevin", "Junior High", 1),
-(2, "Karachi Public School", "K-12", 2),
-(3, "Notre Dame", "High School", 1),
-(4, "Melrose", "Elementary", 3),
-(5, "Kensington", "Secondary", 4);;
+(2, "Karachi Public School", "K-12", 2);
 
 -- Users test data
 INSERT INTO TEACHER_USER (teacher_ID, qualification, hire_date, school_id) VALUES
@@ -43,11 +38,11 @@ INSERT INTO CLASS (class_ID, class_name, subject_name, school_ID, teacher_ID) VA
 (2, "ENG 8", "ENGLISH", 1, 2),
 (3, "URDU 9", "URDU", 2, 4);
 
-INSERT INTO SESSION (session_id, session_date, start_time, end_time, topic, session_status, attendance_finalized_at, class_ID) VALUE 
-(1, "2025-09-01", "8:15", "9:30", "Intro to MATH 8", "Completed", "2025-09-02", "2"),
-(2, "2025-09-02", "8:15", "9:30", "Review MATH 7", "Completed", "2025-09-03", "2"),
-(3, "2026-09-01", "8:15", "9:30", "Intro to MATH 9", "Completed", "2026-09-02", "1"), 
-(4, "2026-09-02", "8:15", "9:30", "Review MATH 8", "Completed", "2026-09-03", "1");
+INSERT INTO SESSION (session_id, session_date, topic, session_status, attendance_finalized_at, class_ID) VALUE 
+(1, "2025-09-01", "Intro to MATH 8", "Completed", "2025-09-02", "2"),
+(2, "2025-09-02", "Review MATH 7", "Completed", "2025-09-03", "2"),
+(3, "2026-09-01", "Intro to MATH 9", "Completed", "2026-09-02", "1"), 
+(4, "2026-09-02", "Review MATH 8", "Completed", "2026-09-03", "1");
 
 INSERT INTO STUDENT (student_ID, first_name, last_name, date_of_birth, enrollment_status, disability_status, grade_level, gender) VALUES
 (1, "Amy", "Black", '2011-09-04', 1, "", 9, "Female"),
@@ -80,14 +75,14 @@ INSERT INTO competency_assessment (assessment_code, max_score, proficiency_cutof
 ("MATH-8-2026", 200, 120),
 ("MATH-9-2027", 150, 100);
 
-INSERT INTO competency (competency_id, assessment_code, attempt_no, score, assessed_on, class_id, student_id) VALUES
-(1, "MATH-8-2026", 1, 100, "2026-06-20", 2, 1),
-(2, "MATH-8-2026", 2, 180, "2026-08-20", 2, 1);
+INSERT INTO competency (competency_id, assessment_code, attempt_no, score, class_id, student_id) VALUES
+(1, "MATH-8-2026", 1, 100, 2, 1),
+(2, "MATH-8-2026", 2, 180, 2, 1);
 
-INSERT INTO LITERACY (literacy_id, assessment_code, attempt_no, score, assessed_on, class_id, student_id) VALUES
-(1, "ENG-8-2026", 1, 100, "2026-06-18", 2, 1),
-(2, "ENG-8-2026", 1, 50, "2026-06-18", 2, 3),
-(3, "ENG-8-2026", 2, 120, "2026-08-18", 2, 3);
+INSERT INTO LITERACY (literacy_id, assessment_code, attempt_no, score, class_id, student_id) VALUES
+(1, "ENG-8-2026", 1, 100, 2, 1),
+(2, "ENG-8-2026", 1, 50, 2, 3),
+(3, "ENG-8-2026", 2, 120, 2, 3);
 
 INSERT INTO funding_source(source_name, source_sector) VALUES
 ("UN", "Literacy"),
@@ -97,9 +92,9 @@ INSERT INTO AWARDS(award_ID, award_name, awarding_body, category, awarded_on, aw
 (1, 'Outsanding Performance Award', 'Government of Canada', 'Academics', '2026-11-10 12:00:00', 'Award issued for students with exemplary performance in academics', 2),
 (2, 'Community Outreach Award', 'Government of Canada', 'Community Service', '2026-11-20 12:00:00', 'Award issued for students with an overwhelming amount of community service', 1);
 
-INSERT INTO FUNDING(source_name, amount, currency, recieved_on, purpose, school_ID, award_ID) VALUES
-("UN", 100000, "USD", "2026-06-01", "Promote literacy", 1, 1),
-("USAID", 1000000, "USD", "2026-01-30", "Increase litearcy among school aged children", 2, 2);
+INSERT INTO FUNDING(source_id, amount, currency, received_on, purpose, school_ID, award_ID) VALUES
+(1, 100000, "USD", "2026-06-01", "Promote literacy", 1, 1),
+(2, 1000000, "USD", "2026-01-30", "Increase litearcy among school aged children", 2, 2);
 
 INSERT INTO GOALS (goal_ID, title, sdg_target, cohort_definition, baseline_value, metric, target_value, due_date, goal_status, school_ID, government_ID) VALUES
 (1, 'Improve Grade 9 Mathematics Performance', 'SDG 4.1', 'All Grade 9 students at Langevin', 65, 'Average Mathematics Score', 85, '2027-06-30', 'In Progress', 1, 1),
@@ -118,7 +113,7 @@ INSERT INTO ACTIONITEM (actionitem_ID, title, item_description, item_status, due
 
 INSERT INTO REMINDERS (reminder_ID, reminder_message, reminder_status, sent_at, scheduled_at, school_ID, actionitem_ID, user_ID) VALUES
 (1, 'Submit monthly literacy progress report', 'sent', '2026-10-01 08:00:00', '2026-11-01 08:00:00', 1, 1, 1),
-(2, 'Complete student attendance records', 'recieved', '2026-11-01 08:00:00', '2026-11-02 08:00:00', 1, 2, 2),
+(2, 'Complete student attendance records', 'received', '2026-11-01 08:00:00', '2026-11-02 08:00:00', 1, 2, 2),
 (3, 'Review funding allocation for literacy program', 'sent', '2026-10-15 10:00:00', '2026-10-20 10:00:00', 2, 3, 5),
 (4, 'Submit updated student assessment scores', 'viewed', '2026-11-15 12:00:00', '2026-11-25 12:00:00', 2, 3, 4),
 (5, 'Review school literacy performance', 'viewed', '2026-09-01 09:00:00', '2026-12-01 09:00:00', 1, 4, 3);
@@ -129,10 +124,4 @@ INSERT INTO COUNTRY_STATISTICS (country_ID, statistics_year, male_pop, female_po
 (1, 2026, 20400000, 20900000, 56000, 99.1),
 (2, 2024, 125000000, 120000000, 1500, 58.0),
 (2, 2025, 127000000, 122000000, 1580, 59.0),
-(2, 2026, 129000000, 124000000, 1650, 60.0),
-(3, 2024, 13510000, 13700000, 64400, 99.0),
-(3, 2025, 13510000, 13910000, 65130, 99.0),
-(3, 2026, 13510000, 14160000, 69360, 99.0),
-(4, 2024, 167340000, 17180000, 86170, 99.0),
-(4, 2025, 167700000, 17400000, 90027, 99.0),
-(4, 2026, 175400000, 17360000, 94083, 99.0);
+(2, 2026, 129000000, 124000000, 1650, 60.0);

@@ -4,7 +4,6 @@ CREATE DATABASE ENSF_608_Project;
 USE ENSF_608_Project;
 
 -- USERS
--- SHA256 hash creates a 64 character hash 
 CREATE TABLE USERS (
     user_ID             int not null AUTO_INCREMENT,
     username            varchar(30),
@@ -12,7 +11,7 @@ CREATE TABLE USERS (
     email               varchar(255) UNIQUE,
     first_name          varchar(100),
     last_name           varchar(100),
-    user_type           ENUM('Government User', 'Teacher User', 'Admin'),
+    user_type           ENUM('Government User', 'Teacher User', 'UN User', 'Admin'),
     
     PRIMARY KEY (user_ID)
 );
@@ -53,7 +52,6 @@ CREATE TABLE LOCALITY (
 -- GOVERNMENT USERS
 CREATE TABLE GOVERNMENT_USER (
     government_ID       int NOT NULL,
-    -- user_ID             int,
     department          varchar(200),
     job_title           varchar(200),
     country_ID          int,   
@@ -64,7 +62,6 @@ CREATE TABLE GOVERNMENT_USER (
 );
 
 -- SCHOOL
--- locality id foreign key added at bottom
 CREATE TABLE SCHOOL (
     school_ID           int not null AUTO_INCREMENT,
     school_name         varchar(100),
@@ -84,7 +81,6 @@ CREATE TABLE SCHOOL (
 -- TEACHER USERS
 CREATE TABLE TEACHER_USER (
     teacher_ID          int NOT NULL, 
-    -- user_ID             int,
     qualification       varchar(200),
     hire_date           date,
     school_ID           int,
@@ -95,8 +91,6 @@ CREATE TABLE TEACHER_USER (
 );
 
 -- STUDENT
--- Enrollement status should be binary, enrolled - 1, not enrolled - 0
--- Disability status - varchar - lots of diabilities with unique needs
 CREATE TABLE STUDENT (
     student_ID          int not null AUTO_INCREMENT,
     first_name          varchar(100),
@@ -136,6 +130,7 @@ CREATE TABLE CLASS (
     FOREIGN KEY (teacher_id) REFERENCES Teacher_User(teacher_id)
 );
 
+-- CLASS_STUDENT_TAKES
 CREATE TABLE CLASS_STUDENT_TAKES (
     class_ID    INT,
     student_ID  INT,
@@ -148,6 +143,7 @@ CREATE TABLE CLASS_STUDENT_TAKES (
 );
 
 -- AWARDS
+-- Doesn't necessarily come with funding 
 CREATE TABLE AWARDS (
     award_ID            int not null AUTO_INCREMENT,
     award_name          varchar(255),
@@ -163,27 +159,27 @@ CREATE TABLE AWARDS (
 
 -- FUNDING
 CREATE TABLE FUNDING_SOURCE (
+    source_id       INT NOT NULL AUTO_INCREMENT, 
     source_name     varchar(255),
     source_sector   varchar(255),
 
-    PRIMARY KEY (source_name)
+    PRIMARY KEY (source_id)
 );
 
 CREATE TABLE FUNDING (
     funding_no          int not null AUTO_INCREMENT,
-    source_name         varchar(255),
-    -- source_sector       varchar(255),
-    amount              long,
+    source_id           INT, 
+    amount              BIGINT,
     currency            varchar(100),
-    recieved_on         date,
+    received_on         date,
     purpose             varchar(100),
-    school_ID           int NOT NULL,
-    award_ID            int NOT NULL,
+    school_ID           int,
+    award_ID            int,
 
     PRIMARY KEY (funding_no),
     FOREIGN KEY (school_ID) REFERENCES school(school_ID),
     FOREIGN KEY (award_ID) REFERENCES awards(award_ID),
-    FOREIGN KEY (source_name) REFERENCES FUNDING_SOURCE(source_name)
+    FOREIGN KEY (source_Id) REFERENCES FUNDING_SOURCE(source_Id)
 );
 
 -- GOALS
@@ -214,7 +210,6 @@ CREATE TABLE ACTIONITEM (
     due_date            datetime,
     completed_on        date,
     goal_ID             int,
-    -- user_ID             int,
     teacher_ID          int,
     student_ID          int,
     school_ID           int,
@@ -230,7 +225,7 @@ CREATE TABLE ACTIONITEM (
 CREATE TABLE REMINDERS (
     reminder_ID         int not null AUTO_INCREMENT,
     reminder_message    varchar(255),
-    reminder_status     ENUM('sent', 'recieved', 'viewed'),
+    reminder_status     ENUM('sent', 'received', 'viewed'),
     sent_at             datetime,
     scheduled_at        datetime,
     school_ID           int,
@@ -243,24 +238,25 @@ CREATE TABLE REMINDERS (
     FOREIGN KEY (user_ID) REFERENCES users(user_id)
 );
 
+-- COMPETENCY_ASSESSMENT
 -- Normalization table
 -- Exam info
 CREATE TABLE COMPETENCY_ASSESSMENT (
     assessment_code     VARCHAR(50),
     max_score           int,
     proficiency_cutoff  int,
+    assessed_on         date,
 
     PRIMARY KEY (assessment_code)
 );
 
 -- COMPETENCY
--- Describes the students attempt at a standardized competency test
+-- Describes the students attempt at a standardized competency test (Math, science, social studies, history)
 CREATE TABLE COMPETENCY (
     competency_ID       int not null AUTO_INCREMENT,
     assessment_code     VARCHAR(50),
     attempt_no          int,
     score               int,
-    assessed_on         date,
     class_ID            int,
     student_ID          int,
     
@@ -271,11 +267,10 @@ CREATE TABLE COMPETENCY (
 );
 
 -- SESSION
+-- Describes a specific class, including the topic for the class
 CREATE TABLE SESSION (
     session_ID          int not null AUTO_INCREMENT,
     session_date        date,
-    start_time          time,
-    end_time            time,
     topic               varchar(100),
     session_status      ENUM('Scheduled', 'In Progress', 'Completed'),
     attendance_finalized_at date,
@@ -285,22 +280,11 @@ CREATE TABLE SESSION (
     FOREIGN KEY (class_ID) REFERENCES class(class_ID)
 );
 
--- CREATE TABLE STUDENT_SESSION_TAKES (
---     student_ID      int,
---     session_ID      int,
---     absence_reason  varchar(100),
-
---     PRIMARY KEY(student_id, session_id),
---     FOREIGN KEY(student_ID) REFERENCES student(student_ID),
---     FOREIGN KEY(session_id) REFERENCES session(session_ID)
--- );
-
 -- ATTENDANCE
 CREATE TABLE ATTENDANCE (
     student_ID      int,
     session_ID      int,
     attendance      ENUM('present', 'absent'),
-    -- attendance_date DATE,
     absence_reason  varchar(100), 
 
     PRIMARY KEY(student_ID, session_ID),
@@ -314,6 +298,7 @@ CREATE TABLE LITERACY_ASSESSMENT (
     assessment_code     VARCHAR(50),
     max_score           int,   
     literacy_cutoff     int,
+    assessed_on         date,
 
     PRIMARY KEY(assessment_code)
 );
@@ -323,7 +308,6 @@ CREATE TABLE LITERACY_ASSESSMENT (
 -- Describes the students attempt at a standardized literacy test
 CREATE TABLE LITERACY (
     literacy_ID         int not null AUTO_INCREMENT,
-    assessed_on         date,
     attempt_no          int,
     score               int,
     assessment_code     VARCHAR(50),
